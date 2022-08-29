@@ -21,7 +21,7 @@ func Init() {
 	if err != nil {
 		panic("DB Connection Error")
 	}
-	db.AutoMigrate(&model.Plan{})
+	db.AutoMigrate(&model.Plan{}, &model.Student{})
 
 }
 

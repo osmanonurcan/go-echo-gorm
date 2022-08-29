@@ -21,4 +21,13 @@ type Plan struct {
 	StartTime  time.Time `json:"start_time"`
 	FinishTime time.Time `json:"finish_time"`
 	State      string    `json:"state"`
+	StudentID  uint
+}
+
+type Student struct {
+	gorm.Model
+	Name    string `json:"name"`
+	Surname string `json:"surname"`
+	Mail    string `json:"mail"`
+	Plans   []Plan
 }
