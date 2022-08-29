@@ -135,6 +135,7 @@ func DeleteStudent(c echo.Context) error {
 	//ACCESS TO DB
 	db := db.DbManager()
 	student_db := model.Student{}
+	plans := []model.Plan{}
 
 	//READ ID PARAMETER
 	id, err := strconv.Atoi(c.Param("id"))
@@ -145,8 +146,10 @@ func DeleteStudent(c echo.Context) error {
 
 	//GET THE FIRST PLAN FROM DB WHERE ID=ID TO PLAN_DB VARIABLE
 	db.First(&student_db, id)
+	db.Where("student_id = ?", id).Find(&plans)
 
 	//DELETE THE PLAN WHERE ID=ID
 	db.Delete(&student_db)
+	db.Delete(&plans)
 	return c.String(http.StatusOK, "")
 }

@@ -18,26 +18,22 @@ func GetPlans(c echo.Context) error {
 	//ACCESS TO DB
 	db := db.DbManager()
 	plans := []model.Plan{}
-	student := model.Student{}
 
 	//READ ID PARAMETER
-	id, err := strconv.Atoi(c.Param("id"))
+	student_id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		log.Printf("Failed reading the request param: %s", err)
 		return c.String(http.StatusInternalServerError, "")
 	}
-
-	//GET STUDENT FROM DB TO STUDENT VARIABLE
-	db.Find(&student, id)
 
 	//log.Print(student)
 
 	//err = db.Model(&student).Association("Plan").Find(&plans).Error
 	//log.Print(err)
 
-	db.Where("student_id = ?", id).Find(&plans)
+	db.Where("student_id = ?", student_id).Find(&plans)
 
-	//log.Print(plans)
+	log.Print(plans)
 
 	// spew.Dump(json.Marshal(users))
 	// return c.JSON(http.StatusOK, users)
@@ -76,7 +72,7 @@ func AddPlan(c echo.Context) error {
 
 	plan.StudentID = uint(id)
 
-	//log.Print(plan)
+	log.Print(id)
 
 	//CHECK TIME CONFLICT IN PLANS
 	db.Where("(start_time BETWEEN ? AND ? ) OR (finish_time BETWEEN ? AND ?) OR (start_time<? AND finish_time>?) AND student_id = ?", plan.StartTime, plan.FinishTime, plan.StartTime, plan.FinishTime, plan.StartTime, plan.FinishTime, id).Find(&plans)
@@ -174,6 +170,7 @@ func DeletePlan(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "")
 	}
 
+	log.Print(plan_id)
 	//GET THE FIRST PLAN FROM DB WHERE ID=ID TO PLAN_DB VARIABLE
 	db.First(&plan_db, plan_id)
 
